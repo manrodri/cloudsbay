@@ -13,6 +13,15 @@ const RegisterComplete = ({history}) => {
     let dispatch = useDispatch()
     const {user} = useSelector((state) => ({...state}));
 
+    const roleBasedRedirect = (role) => {
+        if (role === 'admin') {
+            history.push('/admin/dashboard')
+        } else {
+            history.push('/user/history')
+        }
+    }
+
+
     useEffect(() => {
         setEmail(window.localStorage.getItem("emailForRegistration"));
         // console.log(window.location.href);
@@ -59,12 +68,14 @@ const RegisterComplete = ({history}) => {
                             },
                         });
 
+                        roleBasedRedirect(data.role)
+
                     })
                     .catch(err => {
                         console.error(err)
                         toast.error(err.message)
                     });
-                history.push("/");
+                // history.push("/");
             }
         } catch (error) {
             console.log(error);

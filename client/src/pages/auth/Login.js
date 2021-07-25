@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-import { createOrUpdateUser } from "../../functions/auth";
+import {createOrUpdateUser} from "../../functions/auth";
 
 const Login = ({history}) => {
     const [email, setEmail] = useState("man.rodri.barr@gmail.com");
@@ -21,6 +21,14 @@ const Login = ({history}) => {
     }, [user]);
 
     let dispatch = useDispatch();
+
+    const roleBasedRedirect = (role) => {
+        if (role === 'admin') {
+            history.push('/admin/dashboard')
+        } else {
+            history.push('/user/history')
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,6 +51,7 @@ const Login = ({history}) => {
                             token: idTokenResult.token,
                         },
                     });
+                    roleBasedRedirect(data.role);
 
                 })
                 .catch(err => {
@@ -50,7 +59,8 @@ const Login = ({history}) => {
                     toast.error(err.message)
                 });
 
-            history.push("/");
+            // history.push("/");
+
 
         } catch (error) {
             console.log(error);
@@ -77,7 +87,8 @@ const Login = ({history}) => {
                                 token: idTokenResult.token,
                             },
                         });
-                        history.push("/");
+                        // history.push("/");
+                        roleBasedRedirect(data.role)
 
                     })
                     .catch(err => console.error(err));
