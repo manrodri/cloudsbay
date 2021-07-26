@@ -50,7 +50,7 @@ const Password = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-2">
+        <div className="col">
           <UserNav />
         </div>
         <div className="col">
