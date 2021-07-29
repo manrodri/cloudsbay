@@ -21,7 +21,7 @@ export const createCategory = async (category, authToken) => {
 }
 
 export const editCategory = async (slug, category, authToken) => {
-    await axios.put(`${process.env.REACT_APP_API}/category/${slug}`, category, {
+    return await axios.put(`${process.env.REACT_APP_API}/category/${slug}`, category, {
         headers: {
             authToken
         }

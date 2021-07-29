@@ -1,15 +1,27 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
 import {useSelector, useDispatch} from "react-redux";
 import {createCategory, getCategories, removeCategory} from "../../../functions/categories";
-import {MailOutlined} from "@ant-design/icons";
+import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import {Button} from "antd";
+import {Link} from 'react-router-dom'
+import CategoryForm from "../../../components/forms/categoryForm";
 
 const CategoryCreate = () => {
 
     const [name, setName] = useState("")
     const [loading, setLoading] = useState(false)
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        loadCategories()
+    }, [])
+
+
+
+    const loadCategories = () =>
+        getCategories().then(res => setCategories(res.data)).catch(err => console.log(err))
 
     const {user} = useSelector(state => ({...state}))
 
@@ -21,6 +33,15 @@ const CategoryCreate = () => {
                 setLoading(false)
                 setName('')
                 toast.success(`"${res.data.name}" created`);
+                setLoading(true)
+                loadCategories()
+                    .then(res => {
+                    setLoading(false)
+                })
+                    .catch(err => {
+                        console.log(err)
+                        setLoading(false)
+                    })
             })
             .catch((err) => {
                 setLoading(false)
@@ -31,32 +52,23 @@ const CategoryCreate = () => {
         console.log(name)
     }
 
-    const categoryForm = () => {
-        return (
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        className={'form-control'}
-                        value={name}
-                        onChange={event => setName(event.target.value)}
-                    />
-                    <br/>
-                    <Button
-                        onClick={handleSubmit}
-                        type="primary"
-                        className="mb-1"
-                        block
-                        shape="round"
-                        size="small"
-                        disabled={!name || name.length < 1}
-                    >
-                        Submit
-                    </Button>
-                </div>
-            </form>
-        )
+    const handleRemove = async slug => {
+        if (window.confirm("Delete?")) {
+            try {
+                setLoading(true)
+                removeCategory(slug, user.token)
+                    .then(res => {
+                        setLoading(false)
+                        toast.success(`category: ${slug} deleted`)
+                        loadCategories().then().catch(err=> console.log(err))
+                    })
+                    .catch(err => console.log(err.response.data))
+            } catch (err) {
+                console.log(err)
+                toast.error(err.message)
+            }
+        }
+
     }
 
     return (
@@ -66,8 +78,29 @@ const CategoryCreate = () => {
                     <AdminNav/>
                 </div>
                 <div className="col">
-                    <h4>Create category</h4>
-                    {categoryForm()}
+                    {loading ? <h4 className={'text-danger'}>Loading</h4> : <h4>Create category</h4>}
+                    <CategoryForm handleSubmit={handleSubmit} name={name} setName={setName}/>
+                    <br/>
+                    {categories.map(cat => {
+                        return (
+                            <div className={'alert alert-second'} key={cat._id}>
+                                {cat.name}
+                                <span
+                                    onClick={() => handleRemove(cat.slug)}
+                                    className={'btn btn-sm float-right'}
+                                    style={{marginLeft: "1em"}}>
+                                    <DeleteOutlined className={'text-danger'}/>
+                                </span>
+                                <span
+                                    className={'btn btn-sm float-right'}
+                                    style={{marginLeft: "1em"}}>
+                                    <Link to={`/admin/category/${cat.slug}`}>
+                                        <EditOutlined className={'text-warning'}/>
+                                    </Link>
+                                </span>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
         </div>
