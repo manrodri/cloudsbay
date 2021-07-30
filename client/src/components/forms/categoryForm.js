@@ -11,6 +11,7 @@ const CategoryForm = ({handleSubmit, name, setName}) => {
                         className={'form-control'}
                         value={name}
                         onChange={event => setName(event.target.value)}
+                        autoFocus={true}
                     />
                     <br/>
                     <Button

@@ -7,17 +7,18 @@ import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import {Button} from "antd";
 import {Link} from 'react-router-dom'
 import CategoryForm from "../../../components/forms/categoryForm";
+import LocalSearch from "../../../components/forms/LocalSearch";
 
 const CategoryCreate = () => {
 
     const [name, setName] = useState("")
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
+    const [keyword, setKeyword] = useState('')
 
     useEffect(() => {
         loadCategories()
     }, [])
-
 
 
     const loadCategories = () =>
@@ -36,8 +37,8 @@ const CategoryCreate = () => {
                 setLoading(true)
                 loadCategories()
                     .then(res => {
-                    setLoading(false)
-                })
+                        setLoading(false)
+                    })
                     .catch(err => {
                         console.log(err)
                         setLoading(false)
@@ -60,7 +61,7 @@ const CategoryCreate = () => {
                     .then(res => {
                         setLoading(false)
                         toast.success(`category: ${slug} deleted`)
-                        loadCategories().then().catch(err=> console.log(err))
+                        loadCategories().then().catch(err => console.log(err))
                     })
                     .catch(err => console.log(err.response.data))
             } catch (err) {
@@ -71,17 +72,20 @@ const CategoryCreate = () => {
 
     }
 
+    // function for searching that'll filter the categories dynamically
+    const searched = (keyword) => c => c.name.toLowerCase().includes(keyword)
+
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col">
+                <div className="col-2">
                     <AdminNav/>
                 </div>
                 <div className="col">
                     {loading ? <h4 className={'text-danger'}>Loading</h4> : <h4>Create category</h4>}
                     <CategoryForm handleSubmit={handleSubmit} name={name} setName={setName}/>
-                    <br/>
-                    {categories.map(cat => {
+                    <LocalSearch setKeyword={setKeyword} keyword={keyword}/>
+                    {categories.filter(searched(keyword)).map(cat => {
                         return (
                             <div className={'alert alert-second'} key={cat._id}>
                                 {cat.name}
