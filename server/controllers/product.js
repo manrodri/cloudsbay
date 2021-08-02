@@ -11,6 +11,13 @@ exports.create = async (req, res) => {
 
     } catch (err) {
         console.log("ERROR CREATING PRODUCT ---> ", err);
-        res.status(400).send("Create product failed");
+        // res.status(400).send("Create product failed");
+        res.status(400).json({
+            err: err.message,
+
+        })
     }
 };
+
+exports.list = async (req, res) =>
+  res.json(await Product.find({}).sort({ createdAt: -1 }).exec());

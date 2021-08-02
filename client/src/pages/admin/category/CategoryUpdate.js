@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
-import {useSelector, useDispatch} from "react-redux";
-import {getCategory, editCategory, removeCategory} from "../../../functions/categories";
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
-import {Button} from "antd";
+import {useSelector} from "react-redux";
+import {getCategory, editCategory } from "../../../functions/categories";
 import CategoryForm from "../../../components/forms/categoryForm";
 
 
@@ -13,16 +11,18 @@ const CategoryUpdate = ({history, match}) => {
     const [name, setName] = useState("")
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        loadCategory()
-    }, [])
-
     const loadCategory = () => {
         const slug = match.params.slug
         getCategory(slug)
             .then(res => setName(res.data.name))
             .catch(err => console.log(err))
     }
+
+
+    useEffect(() => {
+        loadCategory()
+    }, [loadCategory])
+
 
 
     const {user} = useSelector(state => ({...state}))

@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector } from "react-redux";
 import {createCategory, getCategories, removeCategory} from "../../../functions/categories";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
-import {Button} from "antd";
 import {Link} from 'react-router-dom'
 import CategoryForm from "../../../components/forms/categoryForm";
 import LocalSearch from "../../../components/forms/LocalSearch";
