@@ -1,8 +1,10 @@
 import axios from "axios";
 
-export const getCategories = async () => await axios.get(`${process.env.REACT_APP_API}/category`);
+export const getCategories = async () =>
+    await axios.get(`${process.env.REACT_APP_API}/category`);
 
-export const getCategory = async (slug) => await axios.get(`${process.env.REACT_APP_API}/category/${slug}`)
+export const getCategory = async (slug) =>
+    await axios.get(`${process.env.REACT_APP_API}/category/${slug}`)
 
 export const removeCategory = async (slug, authToken) => {
     return await axios.delete(`${process.env.REACT_APP_API}/category/${slug}`, {
@@ -27,3 +29,6 @@ export const editCategory = async (slug, category, authToken) => {
         }
     })
 }
+
+export const getCategorySubs = async (_id) =>
+    await axios.get(`${process.env.REACT_APP_API}/category/subs/${_id}`)

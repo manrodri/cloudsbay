@@ -6,6 +6,12 @@ import {
     createProduct,
 
 } from "../../../functions/product";
+
+import {
+    getCategorySubs,
+    getCategories
+} from "../../../functions/categories";
+import ProductCreateForm from "../../../components/forms/ProductCreateForm";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import {Link} from 'react-router-dom'
 import CategoryForm from "../../../components/forms/categoryForm";
@@ -31,22 +37,29 @@ const initialState = {
 const ProductCreate = ({history}) => {
 
     const [productValues, setProductValues] = useState(initialState)
+    const [loading, setLoading ] = useState(false)
+    const [subsOptions, setSubsOptions] = useState([])
+    const [showSub, setShowSub] = useState(false)
 
-    const {
-        title,
-        description,
-        price,
-        categories,
-        category,
-        subs,
-        shipping,
-        quantity,
-        images,
-        colors,
-        brands,
-        color,
-        brand
-    } = productValues
+    useEffect(()=> {
+        loadCategories()
+    }, [])
+
+    const loadCategories = () => {
+        setLoading(true)
+        getCategories()
+            .then((res)=> {
+                setLoading(false)
+                setProductValues({ ...productValues, categories: res.data})
+            })
+            .catch(err => {
+                setLoading(false)
+                console.log('Error getting categories --->', err)
+                if(err.response.status === 400) toast.error(err.response.data)
+            })
+    }
+
+
 
     const { user } = useSelector((state) => ({...state}))
 
@@ -70,106 +83,35 @@ const ProductCreate = ({history}) => {
         setProductValues({...productValues, [e.target.name]: e.target.value})
     }
 
+    const handleCategoryChange = (e) => {
+        e.preventDefault()
+        // console.log('Clicked category', e.target.value)
+        setProductValues({...productValues, category: e.target.value})
+        setLoading(true)
+        setShowSub(true)
+        getCategorySubs(e.target.value)
+            .then(res => {
+                // console.log('SUB OPTIONS ON CATEGORY CLICK ==> ', res.data)
+                setLoading(false)
+                setSubsOptions(res.data)
+            })
+            .catch(err=> {
+                setLoading(false)
+                console.log(err)
+                if(err.response.status === 400) toast.error(err.response.data)
+            })
+    }
+
     const productForm = () => {
         return (
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="">Title</label>
-                    <input
-                        type="text"
-                        name={'title'}
-                        className={'form-control'}
-                        value={title}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Description</label>
-                    <input
-                        type="text"
-                        name={'description'}
-                        className={'form-control'}
-                        value={description}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Price</label>
-                    <input
-                        type="text"
-                        name={'price'}
-                        className={'form-control'}
-                        value={price}
-                        onChange={handleChange}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="">Category</label>
-                    <input
-                        type="text"
-                        name={'category'}
-                        className={'form-control'}
-                        value={category}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Quantity</label>
-                    <input
-                        type="number"
-                        name={'quantity'}
-                        className={'form-control'}
-                        value={quantity}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Shipping</label>
-                    <select
-                        name={'shipping'}
-                        className={'form-control'}
-                        onChange={handleChange}
-                    >
-                        <option>Please select</option>
-                        <option value="Yes" >Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Color</label>
-                    <select
-                        name={'color'}
-                        className={'form-control'}
-                        onChange={handleChange}
-                    >
-                        <option>Please select</option>
-                        { colors.map(c => {
-                            return (
-                                <option key={c} value={c}>{c}</option>
-                            )
-                        })}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="">Brand</label>
-                    <select
-                        name={'brand'}
-                        className={'form-control'}
-                        onChange={handleChange}
-                    >
-                        <option>Please select</option>
-                        { brands.map(b => {
-                            return (
-                                <option key={b} value={b}>{b}</option>
-                            )
-                        })}
-                    </select>
-                </div>
-                <button className={'btn btn-outline-info'}>Save</button>
-
-
-            </form>
+            <ProductCreateForm
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                values={productValues}
+                handleCategorgyChange={handleCategoryChange}
+                subOptions={subsOptions}
+                showSub={showSub}
+            />
         )
     }
 
