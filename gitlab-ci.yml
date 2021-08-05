@@ -18,4 +18,4 @@ test:
     - echo "Testing App"
     - npm install
     - CI=true npm test
-    - echo "Test successfully!"
+    - echo "Test successfully!!!"
