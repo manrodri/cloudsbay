@@ -5,7 +5,8 @@ stages:
 build:
   stage: build
   image: node
-  script: 
+  script:
+    - cd client
     - echo "Start building App"
     - npm install
     - npm build
