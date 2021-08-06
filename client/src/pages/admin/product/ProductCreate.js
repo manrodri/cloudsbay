@@ -108,6 +108,7 @@ const ProductCreate = ({history}) => {
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 values={productValues}
+                setValues={setProductValues}
                 handleCategorgyChange={handleCategoryChange}
                 subOptions={subsOptions}
                 showSub={showSub}

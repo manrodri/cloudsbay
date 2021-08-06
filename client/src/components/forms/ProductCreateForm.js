@@ -1,4 +1,8 @@
 import React from "react";
+import {Select} from 'antd';
+
+const {Option} = Select;
+
 
 const ProductCreateForm = ({
                                handleSubmit,
@@ -6,6 +10,7 @@ const ProductCreateForm = ({
                                handleCategorgyChange,
                                setValue,
                                values,
+                               setValues,
                                subOptions,
                                showSub,
                            }) => {
@@ -27,21 +32,27 @@ const ProductCreateForm = ({
 
     const loadSubs = () => {
         return (
-            <div className="form-gruop">
-                <label>Subcategory</label>
-                <select
-                    name={'subcategory'}
+            <div className="form-group">
+                <label>Subcategories</label>
+                <Select
                     className={'form-control'}
-                    // onChange={handleCategorgyChange}
+                    mode={"multiple"}
+                    style={{width: '100%'}}
+                    placeholder={"Please select"}
+                    value={subs}
+                    onChange={value => {
+                        setValues({...values, subs: value})
+                        // console.log(value)
+                        // console.log(subs)
+                    }}
                 >
-                    <option selected>Please select</option>
                     {subOptions.map((sub) => {
                         return (
-                            <option key={sub._id} value={sub._id}>
+                            <Option key={sub._id} value={sub._id}>
                                 {sub.name}
-                            </option>)
+                            </Option>)
                     })}
-                </select>
+                </Select>
             </div>
         )
     }
@@ -148,7 +159,7 @@ const ProductCreateForm = ({
                 </select>
             </div>
 
-            { showSub && subOptions.length > 0 ? loadSubs() : null}
+            {showSub && subOptions.length > 0 ? loadSubs() : null}
             <br/>
 
             <button className={'btn btn-outline-info'}>Save</button>
