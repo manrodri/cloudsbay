@@ -86,7 +86,7 @@ const ProductCreate = ({history}) => {
     const handleCategoryChange = (e) => {
         e.preventDefault()
         // console.log('Clicked category', e.target.value)
-        setProductValues({...productValues, category: e.target.value})
+        setProductValues({...productValues, category: e.target.value, subs: []})
         setLoading(true)
         setShowSub(true)
         getCategorySubs(e.target.value)
