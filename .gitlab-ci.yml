@@ -9,7 +9,8 @@ build:
     - cd client
     - echo "Start building App"
     - npm install
-    - npm build
+    - npm run build
+    - ls
     - echo "Build successfully!"
 
 test:
