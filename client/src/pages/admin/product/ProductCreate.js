@@ -12,10 +12,8 @@ import {
     getCategories
 } from "../../../functions/categories";
 import ProductCreateForm from "../../../components/forms/ProductCreateForm";
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
-import {Link} from 'react-router-dom'
-import CategoryForm from "../../../components/forms/categoryForm";
-import LocalSearch from "../../../components/forms/LocalSearch";
+import FileUpload from "../../../components/forms/FileUpload";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const initialState = {
     title: 'MackBook Pro',
@@ -67,7 +65,7 @@ const ProductCreate = ({history}) => {
         e.preventDefault()
         createProduct(productValues, user.token)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 toast.success("Product created")
                 // window.alert(`${res.data.title} created`)
                 // setProductValues(initialState)
@@ -124,7 +122,14 @@ const ProductCreate = ({history}) => {
                 </div>
 
                 <div className="col-10">
-                    <h4>Product create</h4>
+                    {loading ? <LoadingOutlined className={'h3'}/> : <h4>Product create</h4>}
+                    <div className={'p-3'}>
+                        <FileUpload
+                            values={productValues}
+                            setValues={setProductValues}
+                            setLoading={setLoading}
+                        />
+                    </div>
                     {productForm()}
                 </div>
             </div>
