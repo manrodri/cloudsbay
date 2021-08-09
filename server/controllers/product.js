@@ -6,7 +6,7 @@ exports.create = async (req, res) => {
     try {
         console.log(req.body);  // we verify data sent from the frontend is recieved in the backend
         req.body.slug = slugify(req.body.title)
-        const newProduct =  await new Product(req.body).save()
+        const newProduct = await new Product(req.body).save()
         res.json(newProduct);
 
     } catch (err) {
@@ -19,5 +19,19 @@ exports.create = async (req, res) => {
     }
 };
 
-exports.list = async (req, res) =>
-  res.json(await Product.find({}).sort({ createdAt: -1 }).exec());
+exports.listAll = async (req, res) =>
+    res.json(await Product.find({})
+        .limit(parseInt(req.params.count))
+        .populate('category')
+        .populate('subs')
+        .sort([['createdAt', 'desc']])
+        .exec());
+
+exports.remove = async (req, res) => {
+    try {
+        const deleted = await Product.findOneAndRemove({slug: req.params.slug}).exec();
+        res.json(deleted);
+    } catch (err) {
+        res.status(400).send("Category delete failed");
+    }
+}

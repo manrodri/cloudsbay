@@ -56,3 +56,21 @@ command.
  * `cdk docs`        open CDK documentation
 
 Enjoy!
+
+
+## Architecture
+
+* DNS
+* SSL certificate
+* LB
+* ASG
+* VPC
+* CDN
+* S3 hosting bucket
+
+
+## CD pipeline GitLab
+
+The first stage of the pipeline should build the infra. Option: parse commit
+
+

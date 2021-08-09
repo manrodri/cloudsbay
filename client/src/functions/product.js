@@ -2,6 +2,11 @@ import axios from "axios";
 
 export const getProducts = async () => await axios.get(`${process.env.REACT_APP_API}/product`);
 
+
+export const getProductsByCount = async (count) =>
+    await axios.get(`${process.env.REACT_APP_API}/product/${count}`);
+
+
 export const getProduct = async (slug) => await axios.get(`${process.env.REACT_APP_API}/product/${slug}`)
 
 export const removeProduct = async (slug, authToken) => {
@@ -27,3 +32,4 @@ export const updateProduct = async (slug, product, authToken) => {
         }
     })
 }
+
