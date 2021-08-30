@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-deployment
+  template:
+    metadata:
+      labels:
+        app: ecommerce-deployment
+    spec:
+      containers:
+        - name: auth
+          image: manrodri/ecommerce_server
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://ecommerce-deployment-mongo-service:27017/ecommerce'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-service
+spec:
+  selector:
+    app: ecommerce-deployment
+  ports:
+    - name: ecommerce-deployment
+      protocol: TCP
+      port: 8000
+      targetPort: 8000

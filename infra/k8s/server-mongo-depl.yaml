@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-mongo
+  template:
+    metadata:
+      labels:
+        app: ecommerce-mongo
+    spec:
+      containers:
+        - name: ecommerce-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-deployment-mongo-service
+spec:
+  selector:
+    app: ecommerce-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
